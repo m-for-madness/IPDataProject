@@ -8,32 +8,32 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class CustomValue  implements WritableComparable<CustomValue> {
-    private LongWritable total;
-    private IntWritable counter;
+public class CustomValue implements WritableComparable<CustomValue> {
+    private Long total;
+    private Integer counter;
 
     public CustomValue() {
     }
 
     public CustomValue(long total, int counter) {
-        this.total = new LongWritable(total);
-        this.counter = new IntWritable(counter);
+        this.total = total;
+        this.counter = counter;
     }
 
-    public long getTotal() {
-        return total.get();
+    public Long getTotal() {
+        return total;
     }
 
     public void setTotal(long total) {
-        this.total.set(total);
+        this.total = total;
     }
 
-    public int getCounter() {
-        return counter.get();
+    public Integer getCounter() {
+        return counter;
     }
 
     public void setCounter(int counter) {
-        this.counter.set(counter);
+        this.counter = counter;
     }
 
     @Override
@@ -56,20 +56,24 @@ public class CustomValue  implements WritableComparable<CustomValue> {
 
     @Override
     public int compareTo(CustomValue o) {
-        return total.compareTo(o.total);
+        return compare(total, o.total);
 
     }
 
+    public static int compare(long k1, long k2) {
+        return (k1 < k2 ? -1 : (k1 == k2 ? 0 : 1));
+    }
 
     @Override
     public void readFields(DataInput dataInput) throws IOException {
-        total =  new LongWritable(dataInput.readLong());
-        counter = new IntWritable(dataInput.readInt());
+        total = dataInput.readLong();
+        counter = dataInput.readInt();
 
     }
+
     @Override
     public void write(DataOutput dataOutput) throws IOException {
-        dataOutput.writeLong(total.get());
-        dataOutput.writeInt(counter.get());
+        dataOutput.writeLong(total);
+        dataOutput.writeInt(counter);
     }
 }
